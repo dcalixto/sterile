@@ -12,6 +12,22 @@ module Sterile
     string.gsub(/\s+/, " ").strip
   end
 
+  # Remove HTML/XML tags from text. Also strips out comments, PHP and ERB style tags.
+  #
+  #   'Visit our <a href="http://example.com">website!</a>'.strip_tags # => "Visit our website!"
+  #
+  def strip_tags(string)
+    # Remove HTML/XML tags, comments, PHP tags, ERB tags
+    string
+      .gsub(/<!--.*?-->/m, "")           # HTML comments
+      .gsub(/<\?.*?\?>/m, "")            # PHP tags
+      .gsub(/<%.*?%>/m, "")              # ERB tags
+      .gsub(/<[^>]*>/, "")               # HTML/XML tags
+      .gsub(/&[a-zA-Z0-9#]+;/, " ")      # HTML entities (basic cleanup)
+      .gsub(/\s+/, " ")                  # Normalize whitespace
+      .strip
+  end
+
   # Transliterate to ASCII and strip out any HTML/XML tags.
   #
   #   "<b>nåsty</b>".sterilize # => "nasty"
